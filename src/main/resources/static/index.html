@@ -52,6 +52,32 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="/js/main.js"></script>
+
+<script>
+    document.getElementById('usernameForm').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent the form from submitting the traditional way
+
+        var username = document.getElementById('name').value;
+        var password = document.getElementById('password').value;
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        }).then(response => {
+            if (response.ok) {
+                connect(event); // Call the connect function to establish the WebSocket connection
+            } else {
+                alert("Failed to login");
+            }
+        });
+    });
+</script>
+<script src="js/main.js"></script>
 </body>
 </html>

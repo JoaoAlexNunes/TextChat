@@ -30,30 +30,40 @@
     </div>
 </div>
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="/js/main.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script>
+
     document.getElementById('usernameForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault();  // Prevent the form from submitting the traditional way
 
         var username = document.getElementById('name').value;
         var password = document.getElementById('cpassword').value;
         var confirmPassword = document.getElementById('ccpassword').value;
 
-        if (username && password && confirmPassword && password === confirmPassword) {
-            // Here you can also add further validation if needed
-
-            // If validation passes, redirect to index.html
-            window.location.href = '/index.html';
-        } else {
-            alert('Please ensure all fields are filled correctly and passwords match.');
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
         }
+
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = 'index.html';
+            } else {
+                alert("Failed to create account");
+            }
+        });
     });
 </script>
+
 </body>
 </html>
